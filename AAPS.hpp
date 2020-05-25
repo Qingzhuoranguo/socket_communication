@@ -18,6 +18,8 @@ private:
  	int Port = 0;
  	bool is_Server = false;
  	bool is_Client = false;
+ 	
+	int Accept(AAPS_Socket *server_socket);
 public:
 	AAPS_Socket(){}
 	AAPS_Socket( char addr[], int port );
@@ -25,7 +27,6 @@ public:
 	void status ();
 
 	int ServerSetup(int n);
-	int Accept(AAPS_Socket *server_socket);
 
 	friend class AAPS_COM;
 } ;
