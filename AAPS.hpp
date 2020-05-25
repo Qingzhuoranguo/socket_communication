@@ -16,8 +16,6 @@ private:
 	struct sockaddr_in Socket;
 	char IPv4 [16];
  	int Port = 0;
- 	bool is_Server = false;
- 	bool is_Client = false;
 
 	int Accept(AAPS_Socket *server_socket);
 public:
@@ -42,7 +40,7 @@ public:
 	AAPS_COM(int id, AAPS_Socket *server_socket, AAPS_Socket *client_socket);
 	int Send();
 	int Recv( int size );
-	~AAPS_COM (){}
+	~AAPS_COM (){ delete COM_BUFF; }
 
 };
 

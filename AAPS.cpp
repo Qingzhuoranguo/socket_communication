@@ -29,13 +29,6 @@ AAPS_Socket::AAPS_Socket( char addr[], int port ){
 AAPS_Socket::~AAPS_Socket(){}
 
 void AAPS_Socket::status(){
-	if (is_Server){
-		std::cout << "Socket type:\tServer" << std::endl;
-	}else if (is_Client){
-		std::cout << "Socket type:\tClient" << std::endl;
-	}else{
-		std::cout << "Socket type:\tNeutral" << std::endl;
-	}
 	std::cout << "Socket addr:\t" << IPv4 << std::endl;
 	std::cout << "Socket port:\t" << Port << std::endl;
 	std::cout << std::endl;
@@ -52,15 +45,14 @@ int AAPS_Socket::ServerSetup (int n){
 	}
 
 	std::cout << "Server on (" << IPv4 << ", " << Port << ") is ready to receive.\n\n";
-	is_Server = true;
 	return 0;
 }
 
+int AAPS_Socket::ClientSetup (){
+
+}
+
 int AAPS_Socket::Accept (AAPS_Socket *server_socket){
-	if (is_Server || is_Client){
-		std::cerr << "Socket must be Nuetral\n";
-		return -2;
-	}
 	socklen_t clientlen = sizeof (sockaddr_in);
 	SocketFD = accept(
 		server_socket->SocketFD,
@@ -79,7 +71,6 @@ int AAPS_Socket::Accept (AAPS_Socket *server_socket){
 					 ", " <<
 					 Port << 
 					") is established\n\n";
-	is_Client = true;
 	return 0;
 }
 
@@ -101,7 +92,7 @@ int AAPS_COM::Recv( int size ) {
 		memset (COM_BUFF, 0, size);
 
 		int byteRcv = recv (Client->SocketFD, COM_BUFF, size, 0);
-		
+
 		if (byteRcv < 0){
 			std::cerr << "AAPS_COM: receiving failure.\n";
 			return -2;
@@ -111,6 +102,10 @@ int AAPS_COM::Recv( int size ) {
 		}else{
 			std::cout << std::string (COM_BUFF, 0, byteRcv)<< std::endl;
 		}
+		char msg[20];
+		memset(msg, 0, 20);
+		std::cin >> msg;
+		send (Client->SocketFD, msg, 20, 0);
 		// send (Client->SocketFD, COM_BUFF, byteRcv + 1, 0);
 		// close(Client->SocketFD);
 	}
