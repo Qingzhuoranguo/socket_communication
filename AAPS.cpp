@@ -87,24 +87,21 @@ AAPS_COM::AAPS_COM(int id, AAPS_Socket *server_socket, AAPS_Socket *client_socke
 	COM_ID = id;
 	Server = server_socket;
 	Client = client_socket;
-
 }
 
-AAPS_COM::AAPS_COM(int id, AAPS_Socket *server_socket, AAPS_Socket *client_socket, int size){
-	COM_ID = id;
-	Server = server_socket;
-	Client = client_socket;
-}
-
-int AAPS_COM::Recv(){
+int AAPS_COM::Recv( int size ) {
 	if ( Client->Accept (Server)<0 ){
 		return -1;
 	}
+
+	COM_BUFF = (char *) malloc (size);
+
 	while (true){
 		//clear buffer
-		memset (COM_BUFF, 0, 1024);
+		memset (COM_BUFF, 0, size);
 
-		int byteRcv = recv (Client->SocketFD, COM_BUFF, 1024,0);
+		int byteRcv = recv (Client->SocketFD, COM_BUFF, size, 0);
+		
 		if (byteRcv < 0){
 			std::cerr << "AAPS_COM: receiving failure.\n";
 			return -2;
@@ -114,8 +111,8 @@ int AAPS_COM::Recv(){
 		}else{
 			std::cout << std::string (COM_BUFF, 0, byteRcv)<< std::endl;
 		}
-		send (Client->SocketFD, COM_BUFF, byteRcv + 1, 0);
-		close(Client->SocketFD);
+		// send (Client->SocketFD, COM_BUFF, byteRcv + 1, 0);
+		// close(Client->SocketFD);
 	}
 	return 0;
 }

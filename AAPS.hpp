@@ -18,7 +18,7 @@ private:
  	int Port = 0;
  	bool is_Server = false;
  	bool is_Client = false;
- 	
+
 	int Accept(AAPS_Socket *server_socket);
 public:
 	AAPS_Socket(){}
@@ -34,15 +34,14 @@ public:
 
 class AAPS_COM {
 private:
-	char COM_BUFF[1024];
+	char *COM_BUFF;
 	int COM_ID;
 	AAPS_Socket *Server;
 	AAPS_Socket *Client;
 public:
 	AAPS_COM(int id, AAPS_Socket *server_socket, AAPS_Socket *client_socket);
-	AAPS_COM(int id, AAPS_Socket *server_socket, AAPS_Socket *client_socket, int size);
 	int Send();
-	int Recv();
+	int Recv( int size );
 	~AAPS_COM (){}
 
 };
