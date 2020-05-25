@@ -80,11 +80,13 @@ int AAPS_Socket::Accept (AAPS_Socket *server_socket){
 
 
 int AAPS_COM::Connect (){
+	if (Self != NULL) {return -1;}
 	int indicator = Target->ClientSetup();
 	if (indicator<0){
 		std::cerr << "AAPS_COM: connection error.\n";
 		return indicator;
 	}
+	HandShake();
 	return 0;
 }
 
@@ -103,10 +105,26 @@ std::string itoa(int a)
 }
 
 int AAPS_COM::HandShake() {
-	if ( Target->Accept (Self)<0 ){
-		return -1;
+	// client side handshake
+	if (Self == NULL){
+		int indicator = Target->ClientSetup();
+		if (indicator<0){
+			std::cerr << "AAPS_COM: connection error.\n";
+			return indicator;
+		}
+
+
+		char buff[1024];
+		memset(buff, 0, 1024);
+		int bytesReceived = recv (Target->SocketFD, buff, 1024, 0);
+		if (bytesReceived<0){ return -2; }
+		int x = std::stoi (buff);
+		COM_ID = x;
+		send(Target->SocketFD, itoa(x).c_str(), strlen(itoa(x).c_str()), 0);
+		return 0;
 	}
-	for (int i = 0; i < 50; i ++ ){
+	//else: server side handshake
+	for (int i = 0; i < 50; i ++ ){ //give client 50 trys to respond correct unique id.
 		// give the client the connection id.
 		if (not is_Active){
 			send (Target->SocketFD, itoa(COM_ID).c_str(), strlen(itoa(COM_ID).c_str()), 0);
