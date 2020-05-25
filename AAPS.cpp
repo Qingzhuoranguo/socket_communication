@@ -103,6 +103,12 @@ int AAPS_COM::Recv( int size ) {
 	COM_BUFF = (char *) malloc (size);
 
 	while (true){
+		if (not is_Active){
+			char msg[] = "test";
+			is_Active = true;
+			send (Client->SocketFD, msg, 4, 0);
+		}
+
 		//clear buffer
 		memset (COM_BUFF, 0, size);
 
@@ -117,10 +123,6 @@ int AAPS_COM::Recv( int size ) {
 		}else{
 			std::cout << std::string (COM_BUFF, 0, byteRcv)<< std::endl;
 		}
-		char msg[20];
-		memset(msg, 0, 20);
-		std::cin >> msg;
-		send (Client->SocketFD, msg, 20, 0);
 		// send (Client->SocketFD, COM_BUFF, byteRcv + 1, 0);
 		// close(Client->SocketFD);
 	}

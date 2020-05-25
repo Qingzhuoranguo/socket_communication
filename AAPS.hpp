@@ -39,6 +39,7 @@ private:
 	int COM_ID;
 	AAPS_Socket *Server;
 	AAPS_Socket *Client;
+	bool is_Active = false;
 public:
 	//passive connection 
 	AAPS_COM(int id, AAPS_Socket *server_socket, AAPS_Socket *client_socket);
