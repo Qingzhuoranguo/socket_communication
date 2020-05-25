@@ -3,16 +3,20 @@
 #include <stdlib.h>
 #include <time.h>
 #include <cstring>
+#include <string.h>
+#include <typeinfo>
+
 
 int main (){
 
-	time_t my_time = time (NULL);
+	char *buff = (char *)malloc (10);
 
-	char time[32];
-	memcpy(time,ctime(&my_time),32);
-	memmove(time, time+4, 32-4);
-	std::cout << time << std::endl;
+	for (int i = 0; i < 10; i++){
 
+		buff[i] = 'a';
+	}
+
+	std::cout << std::string (buff) << std::endl;
 
 	return 0;
 }
