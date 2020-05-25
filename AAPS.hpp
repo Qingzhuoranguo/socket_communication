@@ -24,7 +24,10 @@ public:
 	~AAPS_Socket();
 	void status ();
 
+	int get_socketfd(){return SocketFD;}
+
 	int ServerSetup(int n);
+	int ClientSetup();
 
 	friend class AAPS_COM;
 } ;
@@ -37,7 +40,12 @@ private:
 	AAPS_Socket *Server;
 	AAPS_Socket *Client;
 public:
+	//passive connection 
 	AAPS_COM(int id, AAPS_Socket *server_socket, AAPS_Socket *client_socket);
+	//active connection
+	AAPS_COM(AAPS_Socket *server_socket);
+	int Connect();
+
 	int Send();
 	int Recv( int size );
 	~AAPS_COM (){ delete COM_BUFF; }

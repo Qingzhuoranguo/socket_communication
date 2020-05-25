@@ -48,6 +48,9 @@ int AAPS_Socket::ServerSetup (int n){
 	return 0;
 }
 
+int AAPS_Socket::ClientSetup(){
+	return connect (SocketFD, (sockaddr *)&Socket, sizeof(sockaddr_in));
+}
 
 int AAPS_Socket::Accept (AAPS_Socket *server_socket){
 	socklen_t clientlen = sizeof (sockaddr_in);
@@ -76,6 +79,21 @@ AAPS_COM::AAPS_COM(int id, AAPS_Socket *server_socket, AAPS_Socket *client_socke
 	Server = server_socket;
 	Client = client_socket;
 }
+
+AAPS_COM::AAPS_COM(AAPS_Socket *server_socket){
+	Server = server_socket;
+	Client = NULL;
+}
+
+int AAPS_COM::Connect (){
+	int indicator = Server->ClientSetup();
+	if (indicator<0){
+		std::cerr << "AAPS_COM: connection error.\n";
+		return indicator;
+	}
+	return 0;
+}
+
 
 int AAPS_COM::Recv( int size ) {
 	if ( Client->Accept (Server)<0 ){
