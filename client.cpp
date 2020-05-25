@@ -14,27 +14,8 @@ int main (int argc, char *argv[] ){
 
 
 	AAPS_Socket Server (ip, port);
-	
-	int connection = Server.ClientSetup();
-	if (connection < 0){
-		return -1;
-	}
+	AAPS_COM Connection (&Server);
+	Connection.HandShake();
 
-	char buff[1024];
-	std::string userInput;
-	do {
-		std::cout << ">";
-		std::getline (std::cin, userInput);
-
-		int byteSend = send (Server.get_socketfd(), userInput.c_str(), userInput.size() + 1 , 0);
-	}while (true);
-
-	//wait for response
-	// memset (buff, 0, 1024);
-	// int bytesReceived = recv (Server.SocketFD, buff, 1024, 0);
-
-	//display response
-
-	// std::cout << "Server> " << std::string (buff, bytesReceived) << std::endl;
 	return 0;
 }

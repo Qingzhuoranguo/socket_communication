@@ -13,11 +13,12 @@ int main (){
 
 
 	AAPS_Socket Client;
+	int n = Client.Accept(&Server);
+	if (n < 0) {return -1;}
 	UniqueID id;
-	AAPS_COM Connection (id.id, &Server, &Client);
-
-
-	Connection.Recv();
+	
+	AAPS_COM Connection (id.id, &Client, &Server);
+	Connection.HandShake();
 
 
 	return 0;
