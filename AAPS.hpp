@@ -18,13 +18,13 @@ private:
 	char IPv4 [16];
  	int Port = 0;
 
-	int Accept(AAPS_Socket *server_socket);
 public:
 	AAPS_Socket(){}
 	AAPS_Socket( char addr[], int port );
 	~AAPS_Socket();
 	void status ();
 
+	int Accept(AAPS_Socket *server_socket);
 	int get_socketfd(){return SocketFD;}
 
 	int ServerSetup(int n);
