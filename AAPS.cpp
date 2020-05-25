@@ -48,9 +48,6 @@ int AAPS_Socket::ServerSetup (int n){
 	return 0;
 }
 
-int AAPS_Socket::ClientSetup (){
-
-}
 
 int AAPS_Socket::Accept (AAPS_Socket *server_socket){
 	socklen_t clientlen = sizeof (sockaddr_in);
