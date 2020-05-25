@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "AAPS.hpp"
 
 
@@ -74,19 +75,12 @@ int AAPS_Socket::Accept (AAPS_Socket *server_socket){
 	return 0;
 }
 
-AAPS_COM::AAPS_COM(int id, AAPS_Socket *server_socket, AAPS_Socket *client_socket){
-	COM_ID = id;
-	Server = server_socket;
-	Client = client_socket;
-}
 
-AAPS_COM::AAPS_COM(AAPS_Socket *server_socket){
-	Server = server_socket;
-	Client = NULL;
-}
+
+
 
 int AAPS_COM::Connect (){
-	int indicator = Server->ClientSetup();
+	int indicator = Target->ClientSetup();
 	if (indicator<0){
 		std::cerr << "AAPS_COM: connection error.\n";
 		return indicator;
@@ -94,43 +88,62 @@ int AAPS_COM::Connect (){
 	return 0;
 }
 
-
-int AAPS_COM::Recv( int size ) {
-	if ( Client->Accept (Server)<0 ){
-		return -1;
-	}
-
-	COM_BUFF = (char *) malloc (size);
-
-	while (true){
-		if (not is_Active){
-			char msg[] = "test";
-			is_Active = true;
-			send (Client->SocketFD, msg, 4, 0);
-		}
-
-		//clear buffer
-		memset (COM_BUFF, 0, size);
-
-		int byteRcv = recv (Client->SocketFD, COM_BUFF, size, 0);
-
-		if (byteRcv < 0){
-			std::cerr << "AAPS_COM: receiving failure.\n";
-			return -2;
-		}else if (byteRcv == 0){
-			std::cout << "AAPS_COM: the Client disconnected\n";
-			return -3;
-		}else{
-			std::cout << std::string (COM_BUFF, 0, byteRcv)<< std::endl;
-		}
-		// send (Client->SocketFD, COM_BUFF, byteRcv + 1, 0);
-		// close(Client->SocketFD);
-	}
-	return 0;
+std::string itoa(int a)
+{
+    std::string ss="";   //create empty string
+    while(a)
+    {
+        int x=a%10;
+        a/=10;
+        char i='0';
+        i=i+x;
+        ss=i+ss;      //append new character at the front of the string!
+    }
+    return ss;
 }
 
-// int AAPS_COM::Send(){
+int AAPS_COM::HandShake() {
+	if ( Target->Accept (Self)<0 ){
+		return -1;
+	}
+	for (int i = 0; i < 50; i ++ ){
+		// give the client the connection id.
+		if (not is_Active){
+			send (Target->SocketFD, itoa(COM_ID).c_str(), strlen(itoa(COM_ID).c_str()), 0);
+		}
+		char buff[1024];
+		memset (buff, 0, 1024);
+		int bytesReceived = recv (Target->SocketFD, buff, 1024, 0);
+		if (bytesReceived<0){ return -2; }
+		if (std::stoi(buff) == COM_ID){
+			std::cout << "HandShake complete.\n";
+			is_Active = true;
+			return 0;
+		}
+	}
+	std::cout << "HandShake failed\n";
+	return -1;
+}
+
+
 	
 
-// }
 
+
+
+		// //clear buffer
+		// memset (COM_BUFF, 0, size);
+
+		// int byteRcv = recv (Client->SocketFD, COM_BUFF, size, 0);
+
+		// if (byteRcv < 0){
+		// 	std::cerr << "AAPS_COM: receiving failure.\n";
+		// 	return -2;
+		// }else if (byteRcv == 0){
+		// 	std::cout << "AAPS_COM: the Client disconnected\n";
+		// 	return -3;
+		// }else{
+		// 	std::cout << std::string (COM_BUFF, 0, byteRcv)<< std::endl;
+		// }
+		// // send (Client->SocketFD, COM_BUFF, byteRcv + 1, 0);
+		// // close(Client->SocketFD);

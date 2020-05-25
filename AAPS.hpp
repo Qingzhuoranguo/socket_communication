@@ -9,6 +9,7 @@
 #include <assert.h>
 #include <stdio.h>
 
+std::string itoa(int a);
 
 class AAPS_Socket {
 private:
@@ -37,19 +38,28 @@ class AAPS_COM {
 private:
 	char *COM_BUFF;
 	int COM_ID;
-	AAPS_Socket *Server;
-	AAPS_Socket *Client;
+	AAPS_Socket *Target;
+	AAPS_Socket *Self;
 	bool is_Active = false;
 public:
 	//passive connection 
-	AAPS_COM(int id, AAPS_Socket *server_socket, AAPS_Socket *client_socket);
+	AAPS_COM(int id, AAPS_Socket *target_socket, AAPS_Socket *self_socket){
+		COM_ID = id;
+		Target = target_socket;
+		Self = self_socket;
+	}
 	//active connection
-	AAPS_COM(AAPS_Socket *server_socket);
+	AAPS_COM(AAPS_Socket *socket){
+		Target = socket;
+		Self = NULL;
+	}
+
 	int Connect();
+	int HandShake();
 
 	int Send();
-	int Recv( int size );
-	~AAPS_COM (){ delete COM_BUFF; }
+	char *Recv( int size );
+	~AAPS_COM (){}
 
 };
 
