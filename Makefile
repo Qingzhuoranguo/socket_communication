@@ -5,6 +5,10 @@ Flags = -Wall -g
 
 all: AAPS_test
 
+test: test.cpp
+	g++ test.cpp -o test $(Flags)
+
+
 AAPS_test: AAPS_test.o AAPS.o UniqueID.o
 	g++ AAPS_test.o AAPS.o UniqueID.o -o AAPS_test $(Flags)
 
