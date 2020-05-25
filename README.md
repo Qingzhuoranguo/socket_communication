@@ -11,6 +11,10 @@ Aaron Personal Server COMmunication module, which establish connection between t
 * AAPS_CRYPTO:\
 Not yet.
 
+# Current Focus
+
+* Handling the steam of bytes from the client.
+
 # References
 
 * UniqueID module \
