@@ -20,6 +20,17 @@ int main (){
 	AAPS_COM Connection (id.id, &Client, &Server);
 	Connection.HandShake();
 
+	int i = 0;
+	while (true){
+		char *rmsg = Connection.Recv();
+		std::cout << rmsg << std::endl;
+
+		i++;
+
+		char msg[] = "Server respond ";
+		strcat(msg, itoa(i).c_str());
+		Connection.Send(msg);
+	}
 
 	return 0;
 }
