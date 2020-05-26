@@ -1,7 +1,7 @@
 # -*- MakeFile -*-
 
 
-Flags = -Wall -g
+Flags = -Wall -g -pthread
 
 all: server client
 
