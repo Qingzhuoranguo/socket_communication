@@ -3,7 +3,7 @@
 
 Flags = -Wall -g -pthread
 
-all: server client
+all: server client test
 
 	
 test: test.cpp
