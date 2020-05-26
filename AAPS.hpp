@@ -47,19 +47,21 @@ public:
 		COM_ID = id;
 		Target = target_socket;
 		Self = self_socket;
+		COM_BUFF = (char *)malloc (1024);
 	}
 	//active connection
 	AAPS_COM(AAPS_Socket *socket){
 		Target = socket;
 		Self = NULL;
+		COM_BUFF = (char *)malloc (1024);
 	}
 
 	int Connect();
 	int HandShake();
 
-	int Send();
-	char *Recv( int size );
-	~AAPS_COM (){}
+	int Send(char *msg );
+	char *Recv();
+	~AAPS_COM (){ delete COM_BUFF; }
 
 };
 
