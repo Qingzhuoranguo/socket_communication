@@ -1,0 +1,13 @@
+1. 
+void get_input ( char **msg ){
+	std::string userInput;
+	getline (std::cin, userInput);
+
+	*msg = (char *)malloc (userInput.size()+1);
+	memcpy (*msg, userInput.c_str(), userInput.size()+1);
+
+	std::cout << userInput.size() << std::endl;
+}
+
+
+although userInput.size() is equal to the real size in byte, you still need to add 1 to it when do the copy because that contains the '\0', without do so will end up with a invalid memory access.
