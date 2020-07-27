@@ -5,7 +5,8 @@
 
 
 int main (){
-	char ip[] = "192.168.0.22";
+	// char ip[] = "192.168.0.22"; // local virtualbox ubuntu ip
+	char ip[] = "192.168.0.125"; // local host windows ip
 	int port = 12000;
 
 	AAPS_Socket Server (ip, port);
